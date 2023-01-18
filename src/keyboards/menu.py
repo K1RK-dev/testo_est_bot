@@ -1,5 +1,5 @@
 from vkbottle.tools import Keyboard, KeyboardButtonColor, Text
-import strings
+import src.helpers.strings as strings
 
 main_menu_keyboard = (
     Keyboard(one_time=False, inline=False)

@@ -1,6 +1,6 @@
 import json
 from vkbottle import TemplateElement, Keyboard, Text, KeyboardButtonColor
-from loader import db
+from src.loader import db
 
 
 async def generate_carousels():

@@ -1,4 +1,4 @@
-from loader import db
+from src.loader import db
 
 
 class DBRequests:

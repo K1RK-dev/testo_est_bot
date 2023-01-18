@@ -3,9 +3,9 @@ import warnings
 
 from vkbottle.bot import Message
 
-from loader import bot, db
-from keyboards.menu import main_menu_keyboard
-from blueprints import blueprints
+from src.loader import bot, db
+from src.keyboards.menu import main_menu_keyboard
+from src.blueprints import blueprints
 
 for bp in blueprints:
     bp.load(bot)

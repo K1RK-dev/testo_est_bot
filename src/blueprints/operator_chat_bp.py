@@ -1,7 +1,7 @@
 from vkbottle.bot import Blueprint, Message
 
-import strings
-from keyboards.menu import main_menu_keyboard
+import src.helpers.strings as strings
+from src.keyboards.menu import main_menu_keyboard
 
 bp = Blueprint()
 

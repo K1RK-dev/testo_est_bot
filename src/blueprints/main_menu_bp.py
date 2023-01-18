@@ -1,7 +1,7 @@
 from vkbottle.bot import Blueprint, Message
-from keyboards.menu import operator_chat_keyboard, cart_keyboard
-from product_menu_loader import generate_carousels
-import strings
+from src.keyboards.menu import operator_chat_keyboard, cart_keyboard
+from src.helpers.product_menu_loader import generate_carousels
+import src.helpers.strings as strings
 
 bp = Blueprint()
 

@@ -1,13 +1,13 @@
 from vkbottle.bot import Blueprint, Message
-from keyboards.menu import main_menu_keyboard, cart_keyboard
-from states.states import SendOrder
-from loader import db
+from src.keyboards.menu import main_menu_keyboard, cart_keyboard
+from src.states.states import SendOrder
+from src.loader import db
 from ast import literal_eval
 from datetime import datetime
-from frontpad_api import FrontPadAPI
+from API.frontpad_api import FrontPadAPI
 from database.db_requests import DBRequests
-from message_generator import MessageGenerator
-import strings
+from src.helpers.message_generator import MessageGenerator
+import src.helpers.strings as strings
 
 bp = Blueprint()
 db_requests = DBRequests()

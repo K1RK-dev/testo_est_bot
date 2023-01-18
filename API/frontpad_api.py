@@ -1,6 +1,6 @@
 import requests
 from config import FP_TOKEN
-import json
+
 
 class FrontPadAPI:
     def __init__(self):
