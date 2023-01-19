@@ -1,3 +1,4 @@
+from src.helpers.strings import SOMETHING_WRONG
 
 
 class MessageGenerator:
@@ -21,5 +22,9 @@ class MessageGenerator:
         for ingredient in ingredients_list:
             ingredient_index += 1
             result += '\n' + str(ingredient_index) + ')' + ingredient
-
         return result
+
+    def generate_product_added_message(self, name):
+        if name:
+            return 'Товар: ' + '"' + name + '" добавлен в корзину.'
+        return SOMETHING_WRONG
