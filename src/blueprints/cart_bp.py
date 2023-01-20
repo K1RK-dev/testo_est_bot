@@ -5,6 +5,7 @@ from ast import literal_eval
 from API.frontpad_api import FrontPadAPI
 from database.db_requests import DBRequests
 from src.helpers.message_generator import MessageGenerator
+from src.helpers.validator import validate_phone_number
 import src.helpers.strings as strings
 
 bp = Blueprint()
@@ -32,12 +33,11 @@ async def show_cart(message: Message):
             for article in articles:
                 product = await db_requests.get_product_by_article(article)
                 if product:
-                    for value in product:
-                        names.append(value['product_name'])
-                        prices.append(value['product_price'])
+                    names.append(product['product_name'])
+                    prices.append(product['product_price'])
 
-                    answer = msg_generator.generate_cart_contents_message(names, prices)
-                    await message.answer(answer, keyboard=cart_keyboard)
+            answer = msg_generator.generate_cart_contents_message(names, prices)
+            await message.answer(answer, keyboard=cart_keyboard)
 
 
 @bp.on.message(text=strings.SEND_ORDER_BTN, payload={'cart_menu': 'send_order'})
@@ -52,7 +52,8 @@ async def send_order(message: Message):
 @bp.on.message(state=SendOrder.PHONE_NUMBER, text='<phone_number>')
 async def send_order(message: Message, phone_number=None):
     user_id = message.from_id
-    if not phone_number or len(phone_number) > 20:
+    is_phone_number_valid = validate_phone_number(str(phone_number))
+    if not is_phone_number_valid:
         await message.answer(strings.INCORRECT_PHONE_NUMBER)
 
     else:
@@ -63,7 +64,7 @@ async def send_order(message: Message, phone_number=None):
             await db_requests.create_order(str(message.from_id), order, order_price, str(phone_number))
             #SENDING REQUEST
             fp = FrontPadAPI()
-            order_json = fp.generate_order_json(order['cart'])
+            order_json = fp.generate_order_json(order)
             is_send = fp.send_order(order_json)
             if is_send:
                 await message.answer(strings.ORDER_CREATED)
@@ -99,25 +100,21 @@ async def add_to_cart(message: Message):
         await message.answer(strings.DONT_UNDERSTAND, keyboard=main_menu_keyboard)
 
     else:
-        if message.payload:
-            article = literal_eval(message.payload)["add_to_cart"]
+        article = literal_eval(message.payload)["add_to_cart"]
 
-            product = await db_requests.get_product_by_article(article)
-            previous_cart = await db_requests.get_customer_cart(user_id)
-            previous_cart_price = await db_requests.get_customer_cart_price(user_id)
+        product = await db_requests.get_product_by_article(article)
+        previous_cart = await db_requests.get_customer_cart(user_id)
+        previous_cart_price = await db_requests.get_customer_cart_price(user_id)
 
-            if previous_cart is None:
-                new_cart = article + ';'
-                new_cart_price = product['product_price']
-            else:
-                if previous_cart_price is None:
-                    previous_cart_price = 0
+        if previous_cart and previous_cart_price:
+            new_cart = previous_cart + article + ';'
+            new_cart_price = str(int(previous_cart_price) + int(product['product_price']))
+        else:
+            new_cart = article + ';'
+            new_cart_price = product['product_price']
 
-                new_cart = previous_cart + article + ';'
-                new_cart_price = str(int(previous_cart_price) + int(product['product_price']))
-
-            await db_requests.update_customer_cart(user_id, new_cart, new_cart_price)
-            await message.answer(msg_generator.generate_product_added_message(product['product_name']))
+        await db_requests.update_customer_cart(user_id, new_cart, new_cart_price)
+        await message.answer(msg_generator.generate_product_added_message(product['product_name']))
 
 
 @bp.on.message(text=strings.GET_COMPOSITION_BTN)

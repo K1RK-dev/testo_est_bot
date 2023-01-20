@@ -15,7 +15,7 @@ class DBRequests:
     async def get_customer_cart(self, user_id):
         sql = 'SELECT `cart` FROM `customers` WHERE `user_id`=%s' % user_id
         result = await db.request(sql)
-        if result['cart']:
+        if result:
             return result['cart']
         return None
 
@@ -35,8 +35,8 @@ class DBRequests:
             return result['cart_price']
         return None
 
-    async def update_customer_phone_number(self, user_id, new_value):
-        sql = 'UPDATE `customers` SET `phone_number`=%s WHERE user_id=%s' % (str(new_value), user_id)
+    async def update_customer_phone_number(self, user_id, phone_number):
+        sql = 'UPDATE `customers` SET `phone_number`=%s WHERE user_id=%s' % (phone_number, user_id)
         try:
             await db.request(sql)
             return True
@@ -44,8 +44,8 @@ class DBRequests:
             print(str(e))
             return False
 
-    async def update_customer_cart(self, user_id, new_value, price):
-        sql = 'UPDATE `customers` SET `cart`=%s, `cart_price`=%s WHERE user_id=%s' % (new_value, price, user_id)
+    async def update_customer_cart(self, user_id, cart, price):
+        sql = 'UPDATE `customers` SET `cart`="%s", `cart_price`=%s WHERE user_id=%s' % (cart, price, user_id)
         try:
             await db.request(sql)
             return True
@@ -68,7 +68,7 @@ class DBRequests:
     async def get_product_by_article(self, article):
         sql = 'SELECT `product_name`, `product_price`, `ingredients` FROM `product_menu` WHERE `article`=%s' % article
         try:
-            result = db.request(sql, 'fetchall')
+            result = await db.request(sql)
             return result
         except Exception as e:
             print(str(e))
@@ -77,7 +77,7 @@ class DBRequests:
     async def get_product_menu(self):
         sql = 'SELECT `product_name`, `product_price`, `ingredients`, `article`, `photo_id` from `product_menu`'
         try:
-            result = db.request(sql, 'fetchall')
+            result = await db.request(sql, 'fetchall')
             return result
         except Exception as e:
             print(str(e))

@@ -7,7 +7,7 @@ db_requests = DBRequests()
 
 async def generate_carousels():
     product_menu = await db_requests.get_product_menu()
-    if not product_menu:
+    if product_menu is None:
         return None
 
     carousels, templates, keyboards = [], [], []

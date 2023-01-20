@@ -17,8 +17,8 @@ class MessageGenerator:
 
     def generate_product_composition_message(self, product_name, ingredients):
         ingredient_index = 0
-        ingredients_list = ingredients['ingredients'].split(',')
-        result = 'Состав товара "' + product_name['product_name'] + '":'
+        ingredients_list = ingredients.split(',')
+        result = 'Состав товара "' + product_name + '":'
         for ingredient in ingredients_list:
             ingredient_index += 1
             result += '\n' + str(ingredient_index) + ')' + ingredient
