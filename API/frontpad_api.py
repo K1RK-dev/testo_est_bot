@@ -25,9 +25,8 @@ class FrontPadAPI:
             if product:
                 products_info.update({product: products.count(product)})
 
-        for product in products_info.keys():
+        for product, product_count in products_info.keys(), products_info.values():
             products_unic.append(product)
-        for product_count in products_info.values():
             counts.append(product_count)
 
         result = {'product': products_unic, 'product_kol': counts}
