@@ -1,3 +1,5 @@
+import json
+
 from vkbottle.bot import Blueprint, Message
 from src.keyboards.menu import main_menu_keyboard, cart_keyboard
 from src.states.states import SendOrder
@@ -27,7 +29,7 @@ async def show_cart(message: Message):
             await message.answer(strings.CART_IS_EMPTY, keyboard=cart_keyboard)
 
         else:
-            articles = customer_cart.split(';')[:-1]
+            articles = list(filter(None, customer_cart.split(';')))
             names, prices = [], []
 
             for article in articles:
@@ -64,7 +66,7 @@ async def send_order(message: Message, phone_number=None):
             await db_requests.create_order(str(message.from_id), order, order_price, str(phone_number))
             #SENDING REQUEST
             fp = FrontPadAPI()
-            order_json = fp.generate_order_json(order)
+            order_json = fp.generate_order_json(order, phone_number)
             is_send = fp.send_order(order_json)
             if is_send:
                 await message.answer(strings.ORDER_CREATED)

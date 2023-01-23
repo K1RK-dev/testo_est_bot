@@ -1,4 +1,5 @@
-import requests
+import json
+from urllib import request, parse
 from config import FP_TOKEN
 
 
@@ -7,15 +8,18 @@ class FrontPadAPI:
         pass
 
     def send_order(self, data):
-        data.update({"secret": FP_TOKEN})
-        print(data)
-        response = requests.post('https://app.frontpad.ru/api/index.php?new_order', data)
-        print(response.json())
-        if response.json()['result'] == 'success':
+        data = parse.urlencode(data, True).encode()
+        req = request.Request('https://app.frontpad.ru/api/index.php?new_order',
+                              data=data,
+                              method="POST",
+                              headers={"Content-Type": "application/x-www-form-urlencoded"})
+        resp = request.urlopen(req)
+
+        if resp.status == 200:
             return True
         return False
 
-    def generate_order_json(self, order):
+    def generate_order_json(self, order, phone_number):
         products = order.split(';')
         products_info = {}
         counts = []
@@ -25,9 +29,9 @@ class FrontPadAPI:
             if product:
                 products_info.update({product: products.count(product)})
 
-        for product, product_count in products_info.keys(), products_info.values():
+        for product, product_count in products_info.items():
             products_unic.append(product)
             counts.append(product_count)
 
-        result = {'product': products_unic, 'product_kol': counts}
+        result = {'secret': FP_TOKEN, 'product[]': products_unic, 'product_kol[]': counts, 'phone': phone_number}
         return result
