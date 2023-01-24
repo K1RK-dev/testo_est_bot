@@ -28,6 +28,12 @@ cart_keyboard = (
     .add(Text(strings.BACK_BTN, payload={'cart_menu': 'back'}), color=KeyboardButtonColor.NEGATIVE)
 )
 
+product_size_keyboard = (
+    Keyboard(one_time=True, inline=False)
+    .add(Text(strings.PIZZA_SIZE_SMALL, payload={'product': 'small'}), color=KeyboardButtonColor.POSITIVE)
+    .add(Text(strings.PIZZA_SIZE_BIG, payload={'product': 'big'}), color=KeyboardButtonColor.POSITIVE)
+)
+
 carousel_keyboard = (
     Keyboard(one_time=False, inline=False)
     .add(Text(strings.ADD_TO_CART_BTN, payload={'carousel': 'add_to_cart'}), color=KeyboardButtonColor.POSITIVE)
