@@ -17,10 +17,10 @@ msg_generator = MessageGenerator()
 @bp.on.message(text=strings.CART_CONTENTS_BTN, payload={'cart_menu': 'show_cart'})
 async def show_cart(message: Message):
     user_id = message.from_id
+    user_info = await bp.api.users.get(user_id)
+    await db_requests.check_registration(user_info)
 
-    if not db_requests.db_is_user_exists(user_id):
-        await message.answer(strings.USER_NOT_REGISTERED)
-    elif not message.payload:
+    if not message.payload:
         await message.answer(strings.DONT_UNDERSTAND)
 
     else:
@@ -44,16 +44,19 @@ async def show_cart(message: Message):
 
 @bp.on.message(text=strings.SEND_ORDER_BTN, payload={'cart_menu': 'send_order'})
 async def send_order(message: Message):
-    if not db_requests.db_is_user_exists(message.from_id):
-        await message.answer(strings.USER_NOT_REGISTERED)
-    else:
-        await message.answer(strings.GET_PHONE_NUMBER)
-        await bp.state_dispenser.set(message.peer_id, SendOrder.PHONE_NUMBER)
+    user_info = await bp.api.users.get(message.from_id)
+    await db_requests.check_registration(user_info)
+
+    await message.answer(strings.GET_PHONE_NUMBER)
+    await bp.state_dispenser.set(message.peer_id, SendOrder.PHONE_NUMBER)
 
 
 @bp.on.message(state=SendOrder.PHONE_NUMBER, text='<phone_number>')
 async def send_order(message: Message, phone_number=None):
     user_id = message.from_id
+    user_info = await bp.api.users.get(user_id)
+    await db_requests.check_registration(user_info)
+
     is_phone_number_valid = validate_phone_number(str(phone_number))
     if not is_phone_number_valid:
         await message.answer(strings.INCORRECT_PHONE_NUMBER)
@@ -81,24 +84,29 @@ async def send_order(message: Message, phone_number=None):
 
 @bp.on.message(text=strings.CLEAR_CART_BTN, payload={'cart_menu': 'clear_cart'})
 async def clear_cart(message: Message):
-    if not db_requests.db_is_user_exists(message.from_id):
-        await message.answer(strings.USER_NOT_REGISTERED)
-    else:
-        await db_requests.clear_customer_cart(message.from_id)
-        await message.answer(strings.CART_CLEARED, keyboard=cart_keyboard)
+    user_id = message.from_id
+    user_info = await bp.api.users.get(user_id)
+    await db_requests.check_registration(user_info)
+
+    await db_requests.clear_customer_cart(message.from_id)
+    await message.answer(strings.CART_CLEARED, keyboard=cart_keyboard)
 
 
 @bp.on.message(text=strings.BACK_BTN, payload={'cart_menu': 'back'})
 async def back(message: Message):
+    user_info = await bp.api.users.get(message.from_id)
+    await db_requests.check_registration(user_info)
+
     await message.answer(strings.GO_BACK, keyboard=main_menu_keyboard)
 
 
 @bp.on.message(text=strings.ADD_TO_CART_BTN)
 async def add_to_cart(message: Message):
     user_id = message.from_id
-    if not db_requests.db_is_user_exists(user_id):
-        await message.answer(strings.USER_NOT_REGISTERED)
-    elif not message.payload:
+    user_info = await bp.api.users.get(user_id)
+    await db_requests.check_registration(user_info)
+
+    if not message.payload:
         await message.answer(strings.DONT_UNDERSTAND, keyboard=main_menu_keyboard)
 
     else:
@@ -121,9 +129,10 @@ async def add_to_cart(message: Message):
 
 @bp.on.message(text=strings.GET_COMPOSITION_BTN)
 async def get_ingredients(message: Message):
-    if not db_requests.db_is_user_exists(message.from_id):
-        await message.answer(strings.USER_NOT_REGISTERED, keyboard=main_menu_keyboard)
-    elif not message.payload:
+    user_info = await bp.api.users.get(message.from_id)
+    await db_requests.check_registration(user_info)
+
+    if not message.payload:
         await message.answer(strings.DONT_UNDERSTAND, keyboard=main_menu_keyboard)
 
     else:
