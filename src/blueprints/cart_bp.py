@@ -44,11 +44,18 @@ async def show_cart(message: Message):
 
 @bp.on.message(text=strings.SEND_ORDER_BTN, payload={'cart_menu': 'send_order'})
 async def send_order(message: Message):
-    user_info = await bp.api.users.get(message.from_id)
+    user_id = message.from_id
+    user_info = await bp.api.users.get(user_id)
+
     await db_requests.check_registration(user_info)
 
-    await message.answer(strings.GET_PHONE_NUMBER)
-    await bp.state_dispenser.set(message.peer_id, SendOrder.PHONE_NUMBER)
+    is_cart = await db_requests.get_customer_cart(user_id)
+    if not is_cart:
+        await message.answer(strings.CART_IS_EMPTY)
+
+    else:
+        await message.answer(strings.GET_PHONE_NUMBER)
+        await bp.state_dispenser.set(user_id, SendOrder.PHONE_NUMBER)
 
 
 @bp.on.message(state=SendOrder.PHONE_NUMBER, text='<phone_number>')
@@ -59,7 +66,10 @@ async def send_order(message: Message, phone_number=None):
 
     is_phone_number_valid = validate_phone_number(str(phone_number))
     if not is_phone_number_valid:
-        await message.answer(strings.INCORRECT_PHONE_NUMBER)
+        if message.payload:
+            await message.answer(strings.CANCEL_ORDER)
+        else:
+            await message.answer(strings.INCORRECT_PHONE_NUMBER)
 
     else:
         await db_requests.update_customer_phone_number(user_id, phone_number)
@@ -97,7 +107,7 @@ async def back(message: Message):
     user_info = await bp.api.users.get(message.from_id)
     await db_requests.check_registration(user_info)
 
-    await message.answer(strings.GO_BACK, keyboard=main_menu_keyboard)
+    await message.answer(strings.MAIN_MENU, keyboard=main_menu_keyboard)
 
 
 @bp.on.message(text=strings.ADD_TO_CART_BTN)

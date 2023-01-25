@@ -14,11 +14,9 @@ async def show_product_menu(message: Message):
     await db_requests.check_registration(user_info)
 
     carousels = await generate_carousels()
-    count = 0
     for carousel in carousels:
-        count += 1
-        await bp.api.messages.send(peer_id=message.from_id, message='Меню: Часть ' + str(count), template=carousel, random_id=0)
-
+        #await bp.api.messages.send(peer_id=message.from_id, message=strings.EMPTY_SYMBOL, template=carousel, random_id=0)
+        await message.answer(message='🍕', template=carousel)
 
 @bp.on.message(text=strings.OPERATOR_COMMUNICATION_BTN, payload={'main_menu': 'chat_with_operator'})
 async def open_operator_chat(message: Message):

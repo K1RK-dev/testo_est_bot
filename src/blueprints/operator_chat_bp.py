@@ -28,4 +28,4 @@ async def back(message: Message):
     user_info = await bp.api.users.get(message.from_id)
     await db_requests.check_registration(user_info)
 
-    await message.answer(strings.GO_BACK, keyboard=main_menu_keyboard)
+    await message.answer(strings.MAIN_MENU, keyboard=main_menu_keyboard)
