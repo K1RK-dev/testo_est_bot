@@ -37,8 +37,11 @@ PRODUCT_MENU_BTN = '🍕 Наше меню'
 #CART
 CART_BTN = '🔍 Корзина'
 CLEAR_CART_BTN = '⛔ Очистить корзину'
-CART_CONTENTS_BTN = '🔍 Содержимое корзины'
+CART_CONTENTS_BTN = '🔍 Содержимое'
 SEND_ORDER_BTN = '🚀 Сделать заказ'
+CHOOSE_SIZE = 'Выберите размер пиццы 👇'
+PIZZA_SIZE_SMALL = '33см'
+PIZZA_SIZE_BIG = '40см'
 
 #OPERATOR
 OPERATOR_COMMUNICATION_BTN = '💬 Оператор'

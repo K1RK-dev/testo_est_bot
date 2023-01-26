@@ -83,7 +83,7 @@ class DBRequests:
             return False
 
     async def get_product_by_article(self, article):
-        sql = 'SELECT `product_name`, `product_price`, `ingredients` FROM `product_menu` WHERE `article`=%s' % article
+        sql = 'SELECT `product_name`, `product_price`, `ingredients`, `size` FROM `product_menu` WHERE `article`=%s' % article
         try:
             result = await db.request(sql)
             return result
@@ -92,7 +92,7 @@ class DBRequests:
             return None
 
     async def get_product_menu(self):
-        sql = 'SELECT `product_name`, `product_price`, `ingredients`, `article`, `photo_id` from `product_menu`'
+        sql = 'SELECT `product_name`, `product_price`, `ingredients`, `article`, `photo_id` from `product_menu` WHERE `size`=33'
         try:
             result = await db.request(sql, 'fetchall')
             return result
