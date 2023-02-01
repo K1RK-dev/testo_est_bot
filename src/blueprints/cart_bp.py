@@ -115,11 +115,19 @@ async def add_to_cart(message: Message):
     user_id = message.from_id
     user_info = await bp.api.users.get(user_id)
     await db_requests.check_registration(user_info)
+    customer_cart = await db_requests.get_customer_cart(user_id)
+    cart_is_full = False
 
     if not message.payload:
         await message.answer(strings.DONT_UNDERSTAND, keyboard=main_menu_keyboard)
 
-    else:
+    elif customer_cart:
+        products_in_cart = customer_cart.split(';')
+        if len(products_in_cart) > 16:
+            cart_is_full = True
+            await message.answer(strings.CART_IS_FULL)
+
+    if not cart_is_full and message.payload:
         article = literal_eval(message.payload)["add_to_cart"]
 
         await message.answer(strings.CHOOSE_SIZE, keyboard=product_size_keyboard)
