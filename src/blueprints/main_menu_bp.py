@@ -15,7 +15,6 @@ async def show_product_menu(message: Message):
 
     carousels = await generate_carousels()
     for carousel in carousels:
-        #await bp.api.messages.send(peer_id=message.from_id, message=strings.EMPTY_SYMBOL, template=carousel, random_id=0)
         await message.answer(message='🍕', template=carousel)
 
 @bp.on.message(text=strings.OPERATOR_COMMUNICATION_BTN, payload={'main_menu': 'chat_with_operator'})

@@ -33,5 +33,5 @@ class FrontPadAPI:
             products_unic.append(product)
             counts.append(product_count)
 
-        result = {'secret': FP_TOKEN, 'product[]': products_unic, 'product_kol[]': counts, 'phone': phone_number}
+        result = {'secret': FP_TOKEN, 'product[]': products_unic, 'product_kol[]': counts, 'phone': phone_number, 'descr': "Заказ с бота ВКонтакте"}
         return result
