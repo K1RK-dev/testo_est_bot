@@ -39,3 +39,9 @@ carousel_keyboard = (
     .add(Text(strings.ADD_TO_CART_BTN, payload={'carousel': 'add_to_cart'}), color=KeyboardButtonColor.POSITIVE)
     .add(Text(strings.GET_COMPOSITION_BTN, payload={'carousel': 'get_ingredients'}), color=KeyboardButtonColor.POSITIVE)
 )
+
+order_type_keyboard = (
+    Keyboard(one_time=True, inline=False)
+    .add(Text(strings.ORDER_TYPE_DELIVERY, payload={'order_type': 'delivery'}), color=KeyboardButtonColor.POSITIVE)
+    .add(Text(strings.ORDER_TYPE_PICKUP, payload={'order_type': 'pickup'}), color=KeyboardButtonColor.POSITIVE)
+)

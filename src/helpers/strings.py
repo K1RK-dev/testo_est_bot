@@ -43,6 +43,10 @@ CHOOSE_SIZE = 'Выберите размер пиццы 👇'
 PIZZA_SIZE_SMALL = '33см'
 PIZZA_SIZE_BIG = '40см'
 
+#ORDER
+ORDER_TYPE_DELIVERY = 'Доставка'
+ORDER_TYPE_PICKUP = 'Самовывоз'
+
 #OPERATOR
 OPERATOR_COMMUNICATION_BTN = '💬 Оператор'
 START_OPERATOR_CHAT_BTN = '💬 Чат с оператором'
