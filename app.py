@@ -3,7 +3,7 @@ import warnings
 
 from vkbottle.bot import Message
 from database.db_requests import DBRequests
-from src.loader import bot, db
+from src.loader import bot
 from src.keyboards.menu import main_menu_keyboard
 from src.blueprints import blueprints
 
