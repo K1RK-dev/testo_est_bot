@@ -17,6 +17,7 @@ async def show_product_menu(message: Message):
     for carousel in carousels:
         await message.answer(message='🍕', template=carousel)
 
+
 @bp.on.message(text=strings.OPERATOR_COMMUNICATION_BTN, payload={'main_menu': 'chat_with_operator'})
 async def open_operator_chat(message: Message):
     user_info = await bp.api.users.get(message.from_id)

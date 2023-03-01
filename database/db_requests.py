@@ -28,6 +28,37 @@ class DBRequests:
         if not is_registred:
             await db.request(sql_2)
 
+    async def check_event_registration(self, user_id):
+        sql = 'SELECT `id` from `events_members` WHERE `user_id`=%s' % user_id
+        result = await db.request(sql)
+        if result:
+            return True
+        return False
+
+    async def register_event_member(self, user_id, attempts_count=15):
+        sql = 'INSERT INTO `events_members` (`user_id`, `attempt_count`) VALUES (%s, %s)' % (user_id, attempts_count)
+        await db.request(sql)
+        success = self.check_event_registration(user_id)
+        if success:
+            return True
+        return False
+
+    async def get_last_event_attempt_timestamp(self, user_id):
+        sql = 'SELECT `last_attempt_timestamp` FROM `events_members` WHERE `user_id`=%s' % user_id
+        result = await db.request(sql)
+        if result:
+            return result
+        else:
+            return None
+
+    async def get_event_attempts_count(self, user_id):
+        sql = 'SELECT `attempt_count` FROM `events_members` WHERE `user_id`=%s' % user_id
+        result = await db.request(sql)
+        if result:
+            return result
+        else:
+            return None
+
     async def get_customer_cart(self, user_id):
         sql = 'SELECT `cart` FROM `customers` WHERE `user_id`=%s' % user_id
         result = await db.request(sql)
@@ -74,7 +105,7 @@ class DBRequests:
         now = datetime.now()
         dt_string = now.strftime("%d.%m.%Y %H:%M:%S")
         sql = 'INSERT INTO `orders` (`user_id`, `order`, `order_price`, `phone_number`, `order_dt`) VALUES (%s, "%s", %s, %s, "%s")' % (
-        user_id, order, price, phone_number, dt_string)
+            user_id, order, price, phone_number, dt_string)
         try:
             await db.request(sql)
             return True

@@ -11,6 +11,8 @@ for bp in blueprints:
     bp.load(bot)
 
 db_requests = DBRequests()
+
+
 @bot.on.message()
 async def no_understand(message: Message):
     user_info = await bp.api.users.get(message.from_id)
